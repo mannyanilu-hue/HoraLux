@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="wishlist.css">
+</head>
+<body>
+    <h1>My Wishlist</h1>
+    <div class="wishlist" id="wishlist">
+        <ul id="wishlistItems"></ul>
+    </div>
+    <script>
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlistItems = document.getElementById('wishlistItems');
+
+        function renderWishlist() {
+            if(wishlist.length === 0) {
+                wishlistItems.innerHTML = '<p class="empty-wishlist">Your wishlist is empty.</p>';
+                return;
+            }
+
+            wishlistItems.innerHTML = wishlist.map(item => `
+            <li>
+                <img src="${item.image}" alt="${item.name}">
+                <div>
+                    <p><strong>${item.name}</strong></p>
+                    <p>Price:$${item.price.toFixed(2)}</p>
+                </div>
+                <button class="remove-btn" onclick="removeFromWishlist(${item.id})">Remove</button>
+            </li>
+            `).join('');
+        }
+
+        function removeFromWishlist(id) {
+            wishlist = wishlist.filter(item => item.id !== id);
+            localStorage.setItem('wishlist',JSON.stringify(wishlist));
+            renderWishlist();
+        }
+
+        renderWishlist();
+    </script>
+</body>
+</html>
